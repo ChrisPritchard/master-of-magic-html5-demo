@@ -11,6 +11,31 @@ let moveSpeed = 6;
 let updateSpeed = 1000/60;
 let moveAction = 0;
 
+function createMap() {
+    let mapX = 60.0;
+    let mapY = 40.0;
+
+    for(var y = 0.0; y < mapY; y++) {
+        let tr = document.createElement("tr");
+        for(var x = 0.0; x < mapX; x++) {
+            let td = document.createElement("td");
+            let noise = (perlin.get(x/mapX*10.0, y/mapY*10.0)+1.0)*0.5;
+            if (noise < 0.5) {
+                td.classList.add("terrain-ocean");
+            } else if (noise < 0.7) {
+                td.classList.add("terrain-grass");
+            } else if (noise < 0.8) {
+                td.classList.add("terrain-forest");
+            } else {
+                td.classList.add("terrain-mountains");
+            }
+            tr.appendChild(td);
+        }
+        map.appendChild(tr);
+    }
+}
+createMap();
+
 function mapLeft() {
     return parseInt(map.style.left.replace('px', ''));
 }
@@ -70,20 +95,8 @@ function centreOn(tx, ty) {
     moveAmount(moveX, moveY);
 }
 
-document.querySelector("#move_left").addEventListener("click", function() {
-    moveAmount(64, 0);
-});
-
-document.querySelector("#move_right").addEventListener("click", function() {
-    moveAmount(-64, 0);
-});
-
-document.querySelector("#move_up").addEventListener("click", function() {
-    moveAmount(0, 64);
-});
-
-document.querySelector("#move_down").addEventListener("click", function() {
-    moveAmount(0, -64);
+document.querySelector("div.container").addEventListener("contextmenu", function(e) {
+    e.preventDefault();
 });
 
 document.querySelector("div.container table").addEventListener("contextmenu", function(e) {

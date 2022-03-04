@@ -4,6 +4,7 @@ body {
 
 div.container {
     border: 1px solid black;
+    background-color: black;
     width: 800px;
     height: 640px;
     overflow: hidden;
@@ -14,11 +15,21 @@ div.container table {
     position: relative;
 }
 
-div.container tr:nth-child(even) {background-color: #f2f2f2;}
-div.container td:nth-child(odd) {background-color: #f2f2f2;}
+div.container td.terrain-ocean {
+    background-color: blue;
+}
+div.container td.terrain-grass {
+    background-color: green;
+}
+div.container td.terrain-forest {
+    background-color: darkgreen;
+}
+div.container td.terrain-mountains {
+    background-color: white;
+}
 
 div.container td {
-    border: 1px solid black;
     min-width: 64px;
     height: 64px;
+    padding: 0;
 }
