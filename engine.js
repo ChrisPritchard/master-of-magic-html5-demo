@@ -1,7 +1,7 @@
 "use strict"
 
-let mapView = document.querySelector("div.container");
-let map = document.querySelector("div.container table");
+let mapView = document.querySelector("div.map-container");
+let map = document.querySelector("table.map");
 map.style.top = '0px';
 map.style.left = '0px';
 
@@ -59,6 +59,7 @@ function moveAmount(dx, dy)
 
     let targetX = mapLeft() + dx;
     let targetY = mapTop() + dy;
+
     let mx = moveSpeed;
     if (targetX < mapLeft())
         mx = -moveSpeed;
@@ -95,11 +96,11 @@ function centreOn(tx, ty) {
     moveAmount(moveX, moveY);
 }
 
-document.querySelector("div.container").addEventListener("contextmenu", function(e) {
+document.querySelector("div.map-container").addEventListener("contextmenu", function(e) {
     e.preventDefault();
 });
 
-document.querySelector("div.container table").addEventListener("contextmenu", function(e) {
+document.querySelector("table.map").addEventListener("contextmenu", function(e) {
     e.preventDefault();
     let td = e.target;
     centreOn(td.offsetLeft, td.offsetTop);

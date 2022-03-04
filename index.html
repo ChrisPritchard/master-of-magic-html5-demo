@@ -4,10 +4,76 @@
         <link rel="stylesheet" href="styles.css" />
     </head>
     <body>
-        <div class="container">
-            <table>
-            </table>
-        </div>
+        <table class="main-container">
+            <tr>
+                <td>
+                    <table class="menu-container">
+                        <tr>
+                            <td>
+                                <button>Game</button>
+                            </td>
+                            <td>
+                                <button>Spells</button>
+                            </td>
+                            <td>
+                                <button>Armies</button>
+                            </td>
+                            <td>
+                                <button>Cities</button>
+                            </td>
+                            <td>
+                                <button>Magic</button>
+                            </td>
+                            <td>
+                                <button>Info</button>
+                            </td>
+                            <td>
+                                <button>Plane</button>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table class="map-and-side-container">
+                        <tr>
+                            <td>
+                                <div class="map-container">
+                                    <table class="map">
+                                    </table>
+                                </div>
+                            </td>
+                            <td>
+                                <table class="side-container">
+                                    <tr>
+                                        <td colspan="2">map</td>
+                                    </tr>
+                                    <tr>
+                                        <td>gold</td>
+                                        <td>mana</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">gold income</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">food surplus</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">mana income</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="next-turn-container">
+                                            <button>Next Turn</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>         
+        </table>
 
         <script src='http://git.io/perlin.js'></script>
         <script src="engine.js"></script>
