@@ -14,10 +14,10 @@ div.container table {
     position: relative;
 }
 
-tr:nth-child(even) {background-color: #f2f2f2;}
-td:nth-child(odd) {background-color: #f2f2f2;}
+div.container tr:nth-child(even) {background-color: #f2f2f2;}
+div.container td:nth-child(odd) {background-color: #f2f2f2;}
 
-td {
+div.container td {
     border: 1px solid black;
     min-width: 64px;
     height: 64px;

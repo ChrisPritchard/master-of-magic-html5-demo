@@ -1,10 +1,13 @@
 "use strict"
 
-let map = document.querySelector(".container table");
+let mapView = document.querySelector("div.container");
+let map = document.querySelector("div.container table");
 map.style.top = '0px';
 map.style.left = '0px';
 
-let moveSpeed = 1;
+let tileDim = 64;
+
+let moveSpeed = 6;
 let updateSpeed = 1000/60;
 let moveAction = 0;
 
@@ -59,6 +62,14 @@ function moveAmount(dx, dy)
     }, updateSpeed);
 }
 
+function centreOn(tx, ty) {
+    let targetX = (mapView.clientWidth / 2 - tileDim / 2) - tx;
+    let targetY = (mapView.clientHeight / 2 - tileDim / 2) - ty;
+    let moveX = targetX - mapLeft();
+    let moveY = targetY - mapTop();
+    moveAmount(moveX, moveY);
+}
+
 document.querySelector("#move_left").addEventListener("click", function() {
     moveAmount(64, 0);
 });
@@ -73,4 +84,10 @@ document.querySelector("#move_up").addEventListener("click", function() {
 
 document.querySelector("#move_down").addEventListener("click", function() {
     moveAmount(0, -64);
+});
+
+document.querySelector("div.container table").addEventListener("contextmenu", function(e) {
+    e.preventDefault();
+    let td = e.target;
+    centreOn(td.offsetLeft, td.offsetTop);
 });
