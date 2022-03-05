@@ -151,6 +151,22 @@ document.querySelector("div.minimap canvas").addEventListener("click", function(
     renderMinimap();
 });
 
-// redraw method for minimap, that draws the view square
-// trigger on move complete from main right click
-// on left click, focus on tile
+// let textureCanvas = document.createElement("canvas");
+// textureCanvas.width = 50;
+// textureCanvas.height = 50;
+// let textureContext = textureCanvas.getContext("2d");
+// for (let x = 0; x < textureCanvas.width; x++) {
+//     for (let y = 0; y < textureCanvas.height; y++) {
+//         let xv = Math.floor(x/5)/textureCanvas.width*25;
+//         let yv = Math.floor(y/5)/textureCanvas.height*25;
+//         let noise = (perlin.get(xv,yv)+1)/2;
+//         let val = parseInt(noise*20)*13;
+//         textureContext.fillStyle = `rgb(${val},${val},${val})`;
+//         textureContext.fillRect(x, y, 1, 1);
+//     }
+// }
+// let background = `url(${textureCanvas.toDataURL()})`;
+// document.querySelector("table.main-container").style.backgroundImage = background;
+// document.querySelectorAll("button").forEach(function(elem) {
+//     elem.style.backgroundImage = `${window.getComputedStyle(elem).backgroundImage.replaceAll(')', '130)')}, ${background}`;
+// });

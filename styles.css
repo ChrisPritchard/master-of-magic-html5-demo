@@ -106,8 +106,8 @@ table.side-container tr {
 div.minimap {
     border: 4px inset;
     background-color: black;
-    height: 80;
-    width: 120;
+    height: 80px;
+    width: 120px;
     margin-left: auto;
     margin-right: auto;
     overflow: hidden;
