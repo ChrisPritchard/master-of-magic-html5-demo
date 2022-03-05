@@ -86,7 +86,7 @@ table.map td.terrain-forest {
     background-color: darkgreen;
 }
 table.map td.terrain-mountains {
-    background-color: white;
+    background-color: grey;
 }
 
 table.map td {
@@ -103,16 +103,35 @@ table.side-container tr {
     height: 18%;
 }
 
+div.minimap {
+    border: 4px inset;
+    background-color: black;
+    height: 80;
+    width: 120;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+}
+
 table.side-container tr:nth-child(2), table.side-container tr:nth-child(6) {
     height: 14%;
 }
 
-table.side-container td {
+table.side-container tr:nth-child(2) td, 
+table.side-container tr:nth-child(3) td, 
+table.side-container tr:nth-child(4) td,
+table.side-container tr:nth-child(5) td  { 
     border: 4px inset;
 }
 
-td.next-turn-container {
+table.side-container tr:nth-child(2) td {
+    width: 50%;
+}
+
+td.next-turn-container div {
     margin: 5px 10px 5px 10px;
+    border: 4px inset;
+    height: 50px;
 }
 
 td.next-turn-container button {

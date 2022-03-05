@@ -1,38 +1,74 @@
 "use strict"
 
+let mapIndex = [];
+
 let mapView = document.querySelector("div.map-container");
 let map = document.querySelector("table.map");
 map.style.top = '0px';
 map.style.left = '0px';
 
+let minimap = document.querySelector("div.minimap canvas").getContext("2d");
+
 let tileDim = 64;
+let miniDim = 2;
 
 let moveSpeed = 6;
 let updateSpeed = 1000/60;
 let moveAction = 0;
 
+function renderMinimap() {
+    for (let y = 0; y < mapIndex.length; y++) {
+        for (let x = 0; x < mapIndex[y].length; x++) {
+            let tid = mapIndex[y][x];
+            if (tid === 0) {
+                minimap.fillStyle = 'darkblue';
+            } else if (tid == 1) {
+                minimap.fillStyle = 'green';
+            } else if (tid == 2) {
+                minimap.fillStyle = 'darkgreen';
+            } else {
+                minimap.fillStyle = 'grey';
+            }
+            minimap.fillRect(x*miniDim, y*miniDim, miniDim, miniDim);
+        }
+    }
+    minimap.strokeStyle = "white";
+    minimap.strokeRect(
+        (-mapLeft()/tileDim)*miniDim,
+        (-mapTop()/tileDim)*miniDim,
+        (mapView.clientWidth/tileDim)*miniDim,
+        (mapView.clientHeight/tileDim)*miniDim);
+}
+
 function createMap() {
     let mapX = 60.0;
     let mapY = 40.0;
 
-    for(var y = 0.0; y < mapY; y++) {
+    for(let y = 0.0; y < mapY; y++) {
         let tr = document.createElement("tr");
-        for(var x = 0.0; x < mapX; x++) {
+        let mapRow = [];
+        for(let x = 0.0; x < mapX; x++) {
             let td = document.createElement("td");
             let noise = (perlin.get(x/mapX*10.0, y/mapY*10.0)+1.0)*0.5;
             if (noise < 0.5) {
                 td.classList.add("terrain-ocean");
+                mapRow.push(0);
             } else if (noise < 0.7) {
                 td.classList.add("terrain-grass");
+                mapRow.push(1);
             } else if (noise < 0.8) {
                 td.classList.add("terrain-forest");
+                mapRow.push(2);
             } else {
                 td.classList.add("terrain-mountains");
+                mapRow.push(3);
             }
             tr.appendChild(td);
         }
         map.appendChild(tr);
+        mapIndex.push(mapRow);
     }
+    renderMinimap();
 }
 createMap();
 
@@ -84,11 +120,12 @@ function moveAmount(dx, dy)
         if (mx === 0 && my === 0) {
             clearInterval(moveAction);
             moveAction = 0;
+            renderMinimap();
         }
     }, updateSpeed);
 }
 
-function centreOn(tx, ty) {
+function moveToCentreOn(tx, ty) {
     let targetX = (mapView.clientWidth / 2 - tileDim / 2) - tx;
     let targetY = (mapView.clientHeight / 2 - tileDim / 2) - ty;
     let moveX = targetX - mapLeft();
@@ -103,5 +140,17 @@ document.querySelector("div.map-container").addEventListener("contextmenu", func
 document.querySelector("table.map").addEventListener("contextmenu", function(e) {
     e.preventDefault();
     let td = e.target;
-    centreOn(td.offsetLeft, td.offsetTop);
+    moveToCentreOn(td.offsetLeft, td.offsetTop);
 });
+
+document.querySelector("div.minimap canvas").addEventListener("click", function(e) {
+    let targetX = (mapView.clientWidth / 2 - tileDim / 2) - (e.offsetX / miniDim)*tileDim;
+    let targetY = (mapView.clientHeight / 2 - tileDim / 2) - (e.offsetY / miniDim)*tileDim;
+    setMapLeft(targetX);
+    setMapTop(targetY);
+    renderMinimap();
+});
+
+// redraw method for minimap, that draws the view square
+// trigger on move complete from main right click
+// on left click, focus on tile
