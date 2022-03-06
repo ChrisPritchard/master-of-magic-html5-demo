@@ -49,25 +49,62 @@ function createMap() {
         let mapRow = [];
         for(let x = 0.0; x < mapX; x++) {
             let td = document.createElement("td");
+            let tex = document.createElement("div");
             let noise = (perlin.get(x/mapX*10.0, y/mapY*10.0)+1.0)*0.5;
             if (noise < 0.5) {
-                td.classList.add("terrain-ocean");
+                td.classList.add("terrain-grass");
+                tex.classList.add("terrain-ocean");
                 mapRow.push(0);
             } else if (noise < 0.7) {
-                td.classList.add("terrain-grass");
+                td.classList.add("terrain-ocean");
+                tex.classList.add("terrain-grass");
                 mapRow.push(1);
             } else if (noise < 0.8) {
-                td.classList.add("terrain-forest");
+                td.classList.add("terrain-grass");
+                tex.classList.add("terrain-forest");
                 mapRow.push(2);
             } else {
-                td.classList.add("terrain-mountains");
+                td.classList.add("terrain-grass");
+                tex.classList.add("terrain-mountains");
                 mapRow.push(3);
             }
+            td.setAttribute("data-pos", x+","+y)
+            td.appendChild(tex);
             tr.appendChild(td);
         }
         map.appendChild(tr);
         mapIndex.push(mapRow);
     }
+
+    for(let y = 0; y < mapY; y++) {
+        for(let x = 0; x < mapX; x++) {
+            let curr = mapIndex[y][x]
+            let radius = "";
+            if (x > 0 && y > 0 && mapIndex[y][x-1] !== curr && mapIndex[y-1][x] !== curr) {
+                radius += "16px "
+            } else {
+                radius += "0 "
+            }
+            if(y > 0 && x < mapX-1 && mapIndex[y-1][x] !== curr && mapIndex[y][x+1] !== curr) {
+                radius += "16px "
+            } else {
+                radius += "0 "
+            }
+            if(x < mapX-1 && y < mapY-1 && mapIndex[y][x+1] !== curr && mapIndex[y+1][x] !== curr) {
+                radius += "16px "
+            } else {
+                radius += "0 "
+            }
+            if(y < mapY-1 && x > 0 && mapIndex[y+1][x] !== curr && mapIndex[y][x-1] !== curr) {
+                radius += "16px "
+            } else {
+                radius += "0 "
+            }
+            let cell = document.querySelector("[data-pos='"+x+","+y+"'] div")
+            cell.style.borderRadius = radius;
+        }
+    }
+
     renderMinimap();
 }
 createMap();

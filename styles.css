@@ -81,24 +81,28 @@ table.map {
     position: relative;
 }
 
-table.map td.terrain-ocean {
+table.map td div {
+    min-width: 64px;
+    height: 64px;
+}
+
+table.map .terrain-ocean {
     background-image: url('images/ocean.gif');
 }
-table.map td.terrain-grass {
+
+table.map .terrain-grass {
     background-image: url('images/grass.gif');
     background-size: cover;
     background-repeat: no-repeat;
 }
-table.map td.terrain-forest {
+table.map .terrain-forest {
     background-color: darkgreen;
 }
-table.map td.terrain-mountains {
+table.map .terrain-mountains {
     background-color: grey;
 }
 
 table.map td {
-    min-width: 64px;
-    height: 64px;
     padding: 0;
 }
 
