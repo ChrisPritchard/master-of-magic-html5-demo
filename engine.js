@@ -3,7 +3,8 @@
 let mapIndex = [];
 
 let mapView = document.querySelector("div.map-container");
-let map = document.querySelector("table.map");
+let map = document.querySelector("div.map");
+let mapTable = document.querySelector("div.map table");
 map.style.top = '0px';
 map.style.left = '0px';
 
@@ -11,6 +12,8 @@ let minimap = document.querySelector("div.minimap canvas").getContext("2d");
 
 let tileDim = 64;
 let miniDim = 2;
+let mapX = 60.0;
+let mapY = 40.0;
 
 let moveSpeed = 6;
 let updateSpeed = 1000/60;
@@ -41,9 +44,6 @@ function renderMinimap() {
 }
 
 function createMap() {
-    let mapX = 60.0;
-    let mapY = 40.0;
-
     for(let y = 0.0; y < mapY; y++) {
         let tr = document.createElement("tr");
         let mapRow = [];
@@ -72,7 +72,7 @@ function createMap() {
             td.appendChild(tex);
             tr.appendChild(td);
         }
-        map.appendChild(tr);
+        mapTable.appendChild(tr);
         mapIndex.push(mapRow);
 
         // issues:
@@ -168,17 +168,21 @@ function moveAmount(dx, dy)
     }, updateSpeed);
 }
 
-function moveToCentreOn(tx, ty) {
-    let targetX = (mapView.clientWidth / 2 - tileDim / 2) - tx;
-    let targetY = (mapView.clientHeight / 2 - tileDim / 2) - ty;
+function moveToCentreOn(pixelX, pixelY) {
+    let targetX = (mapView.clientWidth / 2 - tileDim / 2) - pixelX;
+    let targetY = (mapView.clientHeight / 2 - tileDim / 2) - pixelY;
     let moveX = targetX - mapLeft();
     let moveY = targetY - mapTop();
     moveAmount(moveX, moveY);
 }
 
 function centreOnCursor(e) {
-    let targetX = (mapView.clientWidth / 2 - tileDim / 2) - (e.offsetX / miniDim)*tileDim;
-    let targetY = (mapView.clientHeight / 2 - tileDim / 2) - (e.offsetY / miniDim)*tileDim;
+    centreOn((e.offsetX / miniDim)*tileDim, (e.offsetY / miniDim)*tileDim);
+}
+
+function centreOn(pixelX, pixelY) {
+    let targetX = (mapView.clientWidth / 2 - tileDim / 2) - pixelX;
+    let targetY = (mapView.clientHeight / 2 - tileDim / 2) - pixelY;
     setMapLeft(targetX);
     setMapTop(targetY);
     renderMinimap();
@@ -188,7 +192,7 @@ document.querySelector("div.map-container").addEventListener("contextmenu", func
     e.preventDefault();
 });
 
-document.querySelector("table.map").addEventListener("contextmenu", function(e) {
+document.querySelector("div.map table").addEventListener("contextmenu", function(e) {
     e.preventDefault();
     let td = e.target.parentElement;
     moveToCentreOn(td.offsetLeft, td.offsetTop);
@@ -219,6 +223,18 @@ let background = `url(${textureCanvas.toDataURL()})`;
 let computed = document.createElement("style");
 computed.innerText = `table.main-container { background-image: ${background}; }\nbutton { background-image: ${background}; }`
 document.body.appendChild(computed);
+
+let unitX = 20;
+let unitY = 20;
+
+let unit = document.createElement("div");
+unit.classList.add("unit", "active-unit");
+unit.style.top = (-(mapY*tileDim) + unitY*tileDim) + "px";
+unit.style.left = (unitX*tileDim) + "px";
+unit.style.zIndex = 2;
+map.appendChild(unit);
+
+centreOn(unitX*tileDim, unitY*tileDim);
 
 // for movement, keep track of the current movement remaining
 // end turn resets
