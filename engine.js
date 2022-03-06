@@ -64,7 +64,7 @@ function createMap() {
                 tex.classList.add("terrain-forest");
                 mapRow.push(2);
             } else {
-                td.classList.add("terrain-grass");
+                td.classList.add("terrain-forest");
                 tex.classList.add("terrain-mountains");
                 mapRow.push(3);
             }
@@ -74,6 +74,11 @@ function createMap() {
         }
         map.appendChild(tr);
         mapIndex.push(mapRow);
+
+        // issues:
+        // water diagonally opposite water: should curve land but not water
+        // land against trees: should underlay trees not water
+        // other odd corner combos
     }
 
     for(let y = 0; y < mapY; y++) {
