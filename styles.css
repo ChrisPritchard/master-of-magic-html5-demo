@@ -96,10 +96,10 @@ table.map .terrain-grass {
     background-repeat: no-repeat;
 }
 table.map .terrain-forest {
-    background-color: darkgreen;
+    background-image: url('images/forest.gif');
 }
 table.map .terrain-mountains {
-    background-color: grey;
+    background-image: url('images/mountains.gif');
 }
 
 table.map td {
