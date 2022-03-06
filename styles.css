@@ -114,6 +114,24 @@ table.side-container tr {
     height: 18%;
 }
 
+td.minimap-decorative div {
+    border-left: 2px outset lightgray;
+    border-top: 2px outset lightgray;
+    border-bottom: 2px outset black;
+    border-right: 2px outset black;
+}
+
+td.minimap-decorative div:nth-child(1), td.minimap-decorative div:nth-child(3), td.minimap-decorative div:nth-child(5) {
+    width: 20px;
+    height: 10px;
+}
+
+td.minimap-decorative div:nth-child(2), td.minimap-decorative div:nth-child(4) {
+    width: 10px;
+    height: 5px;
+    margin: 5px auto 5px auto;
+}
+
 div.minimap {
     border: 4px inset;
     background-color: black;
