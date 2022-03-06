@@ -16,15 +16,39 @@ let miniDim = 2;
 let mapX = 60.0;
 let mapY = 40.0;
 
-let moveSpeed = 6;
 let updateSpeed = 1000/60;
-let moveAction = 0;
+
+let mapMoveSpeed = 6;
+let mapMoveAction = 0;
+
+let unitMoveDirectSpeed = 3;
+let unitMoveDiagSpeed = 2;
+let unitMoveAction = 0;
+
+function getLeft(elem) {
+    return parseInt(elem.style.left.replace('px', ''));
+}
+
+function setLeft(elem, val) {
+    elem.style.left = val + 'px';
+}
+
+function getTop(elem) {
+    return parseInt(elem.style.top.replace('px', ''));
+}
+
+function setTop(elem, val) {
+    elem.style.top = val + 'px';
+}
 
 function renderMinimap() {
     for (let y = 0; y < mapIndex.length; y++) {
         for (let x = 0; x < mapIndex[y].length; x++) {
             if (fogIndex[y][x])
                 minimap.fillStyle = 'black';
+            else if (y == unitY && x == unitX) {
+                minimap.fillStyle = 'red';
+            }
             else
             {
                 let tid = mapIndex[y][x];
@@ -43,8 +67,8 @@ function renderMinimap() {
     }
     minimap.strokeStyle = "white";
     minimap.strokeRect(
-        (-mapLeft()/tileDim)*miniDim,
-        (-mapTop()/tileDim)*miniDim,
+        (-getLeft(map)/tileDim)*miniDim,
+        (-getTop(map)/tileDim)*miniDim,
         (mapView.clientWidth/tileDim)*miniDim,
         (mapView.clientHeight/tileDim)*miniDim);
 }
@@ -121,54 +145,38 @@ function createMap() {
 }
 createMap();
 
-function mapLeft() {
-    return parseInt(map.style.left.replace('px', ''));
-}
-
-function setMapLeft(val) {
-    map.style.left = val + 'px';
-}
-
-function mapTop() {
-    return parseInt(map.style.top.replace('px', ''));
-}
-
-function setMapTop(val) {
-    map.style.top = val + 'px';
-}
-
 function moveAmount(dx, dy)
 {
-    if(moveAction)
+    if(mapMoveAction)
         return;
 
-    let targetX = mapLeft() + dx;
-    let targetY = mapTop() + dy;
+    let targetX = getLeft(map) + dx;
+    let targetY = getTop(map) + dy;
 
-    let mx = moveSpeed;
-    if (targetX < mapLeft())
-        mx = -moveSpeed;
+    let mx = mapMoveSpeed;
+    if (targetX < getLeft(map))
+        mx = -mapMoveSpeed;
 
-    let my = moveSpeed;
-    if (targetY < mapTop())
-        my = -moveSpeed;
+    let my = mapMoveSpeed;
+    if (targetY < getTop(map))
+        my = -mapMoveSpeed;
 
-    moveAction = setInterval(function () {
-        if ((mx > 0 && mapLeft() >= targetX) || (mx < 0 && mapLeft() <= targetX)) {
-            setMapLeft(targetX);
+    mapMoveAction = setInterval(function () {
+        if ((mx > 0 && getLeft(map) >= targetX) || (mx < 0 && getLeft(map) <= targetX)) {
+            setLeft(map, targetX);
             mx = 0;
         } else if (mx != 0) {
-            setMapLeft(mapLeft() + mx);
+            setLeft(map, getLeft(map) + mx);
         }
-        if ((my > 0 && mapTop() >= targetY) || (my < 0 && mapTop() <= targetY)) {
-            setMapTop(targetY);
+        if ((my > 0 && getTop(map) >= targetY) || (my < 0 && getTop(map) <= targetY)) {
+            setTop(map, targetY);
             my = 0;
         } else if (my != 0) {
-            setMapTop(mapTop() + my);
+            setTop(map, getTop(map) + my);
         }
         if (mx === 0 && my === 0) {
-            clearInterval(moveAction);
-            moveAction = 0;
+            clearInterval(mapMoveAction);
+            mapMoveAction = 0;
             renderMinimap();
         }
     }, updateSpeed);
@@ -177,8 +185,8 @@ function moveAmount(dx, dy)
 function moveToCentreOn(pixelX, pixelY) {
     let targetX = (mapView.clientWidth / 2 - tileDim / 2) - pixelX;
     let targetY = (mapView.clientHeight / 2 - tileDim / 2) - pixelY;
-    let moveX = targetX - mapLeft();
-    let moveY = targetY - mapTop();
+    let moveX = targetX - getLeft(map);
+    let moveY = targetY - getTop(map);
     moveAmount(moveX, moveY);
 }
 
@@ -189,8 +197,8 @@ function centreOnCursor(e) {
 function centreOn(pixelX, pixelY) {
     let targetX = (mapView.clientWidth / 2 - tileDim / 2) - pixelX;
     let targetY = (mapView.clientHeight / 2 - tileDim / 2) - pixelY;
-    setMapLeft(targetX);
-    setMapTop(targetY);
+    setLeft(map, targetX);
+    setTop(map, targetY);
     renderMinimap();
 }
 
@@ -262,8 +270,65 @@ function removeFogOfWar() {
 }
 removeFogOfWar();
 
-// for movement, keep track of the current movement remaining
-// end turn resets
-// if movement remaining and not moving, blink icon
-// on left click, if movement remaining and within movement of current position, move unit and decrease move
-// remove fog of war for all adjacent tiles
+function moveUnitTo(tx, ty) {
+    if (unitMoveAction)
+        return;
+
+    let moveSpeed = unitMoveDiagSpeed;
+    if (tx == unitX || ty == unitY) {
+        moveSpeed = unitMoveDirectSpeed;
+    }
+
+    let targetX = tx*tileDim;
+    let targetY = -(mapY*tileDim) + ty*tileDim;
+
+    let mx = moveSpeed;
+    if (targetX < getLeft(unit))
+        mx = -moveSpeed;
+    let my = moveSpeed;
+    if (targetY < getTop(unit))
+        my = -moveSpeed;
+
+    unit.classList.remove("active-unit");
+    moveToCentreOn(unitX * tileDim, unitY * tileDim);
+
+    unitMoveAction = setInterval(function () {
+        let currX = getLeft(unit);
+        let currY = getTop(unit);
+        if ((mx > 0 && currX >= targetX) || (mx < 0 && currX <= targetX)) {
+            setLeft(unit, targetX);
+            mx = 0;
+        } else if (mx != 0) {
+            setLeft(unit, currX + mx);
+        }
+        if ((my > 0 && currY >= targetY) || (my < 0 && currY <= targetY)) {
+            setTop(unit, targetY);
+            my = 0;
+        } else if (my != 0) {
+            setTop(unit, currY + my);
+        }
+        if (mx === 0 && my === 0) {
+            clearInterval(unitMoveAction);
+            unitMoveAction = 0;
+            unitX = tx;
+            unitY = ty;
+            renderMinimap();
+            removeFogOfWar();
+            unit.classList.add("active-unit");
+        }
+    }, updateSpeed);
+}
+
+document.querySelector("div.map table").addEventListener("click", function(e) {
+    e.preventDefault();
+    let td = e.target.parentElement;
+    let pos = td.getAttribute("data-pos");
+    if(!pos)
+        return;
+    let txty = pos.split(',');
+    let tx = parseInt(txty[0]);
+    let ty = parseInt(txty[1]);
+    if (Math.abs(tx - unitX) > 1 || Math.abs(ty - unitY) > 1)
+        return;
+    moveUnitTo(tx, ty);
+});
