@@ -77,7 +77,7 @@ table.map {
 }
 
 table.map td.terrain-ocean {
-    background-color: darkblue;
+    background-image: url('images/ocean.gif');
 }
 table.map td.terrain-grass {
     background-color: green;

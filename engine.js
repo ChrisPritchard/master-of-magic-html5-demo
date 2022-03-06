@@ -133,6 +133,14 @@ function moveToCentreOn(tx, ty) {
     moveAmount(moveX, moveY);
 }
 
+function centreOnCursor(e) {
+    let targetX = (mapView.clientWidth / 2 - tileDim / 2) - (e.offsetX / miniDim)*tileDim;
+    let targetY = (mapView.clientHeight / 2 - tileDim / 2) - (e.offsetY / miniDim)*tileDim;
+    setMapLeft(targetX);
+    setMapTop(targetY);
+    renderMinimap();
+}
+
 document.querySelector("div.map-container").addEventListener("contextmenu", function(e) {
     e.preventDefault();
 });
@@ -143,12 +151,10 @@ document.querySelector("table.map").addEventListener("contextmenu", function(e) 
     moveToCentreOn(td.offsetLeft, td.offsetTop);
 });
 
-document.querySelector("div.minimap canvas").addEventListener("click", function(e) {
-    let targetX = (mapView.clientWidth / 2 - tileDim / 2) - (e.offsetX / miniDim)*tileDim;
-    let targetY = (mapView.clientHeight / 2 - tileDim / 2) - (e.offsetY / miniDim)*tileDim;
-    setMapLeft(targetX);
-    setMapTop(targetY);
-    renderMinimap();
+document.querySelector("div.minimap canvas").addEventListener("click", centreOnCursor);
+document.querySelector("div.minimap canvas").addEventListener("contextmenu", function(e) {
+    e.preventDefault();
+    centreOnCursor(e);
 });
 
 // let textureCanvas = document.createElement("canvas");
@@ -161,12 +167,12 @@ document.querySelector("div.minimap canvas").addEventListener("click", function(
 //         let yv = Math.floor(y/5)/textureCanvas.height*25;
 //         let noise = (perlin.get(xv,yv)+1)/2;
 //         let val = parseInt(noise*20)*13;
-//         textureContext.fillStyle = `rgb(${val},${val},${val})`;
+//         textureContext.fillStyle = `rgba(218,165,32,${val})`;
 //         textureContext.fillRect(x, y, 1, 1);
 //     }
 // }
 // let background = `url(${textureCanvas.toDataURL()})`;
-// document.querySelector("table.main-container").style.backgroundImage = background;
+// //document.querySelector("table.main-container").style.backgroundImage = background;
 // document.querySelectorAll("button").forEach(function(elem) {
-//     elem.style.backgroundImage = `${window.getComputedStyle(elem).backgroundImage.replaceAll(')', '130)')}, ${background}`;
+//     elem.style.backgroundImage = background;
 // });
