@@ -219,3 +219,9 @@ let background = `url(${textureCanvas.toDataURL()})`;
 let computed = document.createElement("style");
 computed.innerText = `table.main-container { background-image: ${background}; }\nbutton { background-image: ${background}; }`
 document.body.appendChild(computed);
+
+// for movement, keep track of the current movement remaining
+// end turn resets
+// if movement remaining and not moving, blink icon
+// on left click, if movement remaining and within movement of current position, move unit and decrease move
+// remove fog of war for all adjacent tiles
