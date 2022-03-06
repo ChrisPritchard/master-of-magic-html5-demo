@@ -83,24 +83,25 @@ function createMap() {
 
     for(let y = 0; y < mapY; y++) {
         for(let x = 0; x < mapX; x++) {
-            let curr = mapIndex[y][x]
+            let curr = mapIndex[y][x] - 1
+            if (curr < 0) curr = 1; // for ocean, to test against land
             let radius = "";
-            if (x > 0 && y > 0 && mapIndex[y][x-1] !== curr && mapIndex[y-1][x] !== curr) {
+            if (x > 0 && y > 0 && mapIndex[y][x-1] == curr && mapIndex[y-1][x] == curr) {
                 radius += "16px "
             } else {
                 radius += "0 "
             }
-            if(y > 0 && x < mapX-1 && mapIndex[y-1][x] !== curr && mapIndex[y][x+1] !== curr) {
+            if(y > 0 && x < mapX-1 && mapIndex[y-1][x] == curr && mapIndex[y][x+1] == curr) {
                 radius += "16px "
             } else {
                 radius += "0 "
             }
-            if(x < mapX-1 && y < mapY-1 && mapIndex[y][x+1] !== curr && mapIndex[y+1][x] !== curr) {
+            if(x < mapX-1 && y < mapY-1 && mapIndex[y][x+1] == curr && mapIndex[y+1][x] == curr) {
                 radius += "16px "
             } else {
                 radius += "0 "
             }
-            if(y < mapY-1 && x > 0 && mapIndex[y+1][x] !== curr && mapIndex[y][x-1] !== curr) {
+            if(y < mapY-1 && x > 0 && mapIndex[y+1][x] == curr && mapIndex[y][x-1] == curr) {
                 radius += "16px "
             } else {
                 radius += "0 "
@@ -189,7 +190,7 @@ document.querySelector("div.map-container").addEventListener("contextmenu", func
 
 document.querySelector("table.map").addEventListener("contextmenu", function(e) {
     e.preventDefault();
-    let td = e.target;
+    let td = e.target.parentElement;
     moveToCentreOn(td.offsetLeft, td.offsetTop);
 });
 
