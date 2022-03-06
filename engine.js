@@ -1,6 +1,7 @@
 "use strict"
 
 let mapIndex = [];
+let fogIndex = [];
 
 let mapView = document.querySelector("div.map-container");
 let map = document.querySelector("div.map");
@@ -22,15 +23,20 @@ let moveAction = 0;
 function renderMinimap() {
     for (let y = 0; y < mapIndex.length; y++) {
         for (let x = 0; x < mapIndex[y].length; x++) {
-            let tid = mapIndex[y][x];
-            if (tid === 0) {
-                minimap.fillStyle = 'darkblue';
-            } else if (tid == 1) {
-                minimap.fillStyle = 'green';
-            } else if (tid == 2) {
-                minimap.fillStyle = 'darkgreen';
-            } else {
-                minimap.fillStyle = 'grey';
+            if (fogIndex[y][x])
+                minimap.fillStyle = 'black';
+            else
+            {
+                let tid = mapIndex[y][x];
+                if (tid === 0) {
+                    minimap.fillStyle = 'darkblue';
+                } else if (tid == 1) {
+                    minimap.fillStyle = 'green';
+                } else if (tid == 2) {
+                    minimap.fillStyle = 'darkgreen';
+                } else {
+                    minimap.fillStyle = 'grey';
+                }
             }
             minimap.fillRect(x*miniDim, y*miniDim, miniDim, miniDim);
         }
@@ -47,6 +53,7 @@ function createMap() {
     for(let y = 0.0; y < mapY; y++) {
         let tr = document.createElement("tr");
         let mapRow = [];
+        let fogRow = [];
         for(let x = 0.0; x < mapX; x++) {
             let td = document.createElement("td");
             let tex = document.createElement("div");
@@ -68,17 +75,16 @@ function createMap() {
                 tex.classList.add("terrain-mountains");
                 mapRow.push(3);
             }
-            td.setAttribute("data-pos", x+","+y)
+            td.setAttribute("data-pos", x+","+y);
+            td.classList.add("fog-of-war");
+            tex.classList.add("fog-of-war");
             td.appendChild(tex);
             tr.appendChild(td);
+            fogRow.push(true);
         }
         mapTable.appendChild(tr);
         mapIndex.push(mapRow);
-
-        // issues:
-        // water diagonally opposite water: should curve land but not water
-        // land against trees: should underlay trees not water
-        // other odd corner combos
+        fogIndex.push(fogRow);
     }
 
     for(let y = 0; y < mapY; y++) {
@@ -235,6 +241,26 @@ unit.style.zIndex = 2;
 map.appendChild(unit);
 
 centreOn(unitX*tileDim, unitY*tileDim);
+
+function removeFogOfWar() {
+    for (let dx = unitX - 2; dx <= unitX + 2; dx ++) {
+        for (let dy = unitY - 2; dy <= unitY + 2; dy ++) {
+            if ((dx == unitX - 2 && dy == unitY - 2)
+            || (dx == unitX + 2 && dy == unitY - 2)
+            || (dx == unitX - 2 && dy == unitY + 2)
+            || (dx == unitX + 2 && dy == unitY + 2))
+                continue; // don't unfade corners
+            let tile = document.querySelector("[data-pos='"+dx+","+dy+"'] div")
+            if (tile) {
+                fogIndex[dy][dx] = false;
+                tile.classList.remove("fog-of-war");
+                tile.parentNode.classList.remove("fog-of-war");
+            }
+        }
+    }
+    renderMinimap();
+}
+removeFogOfWar();
 
 // for movement, keep track of the current movement remaining
 // end turn resets
