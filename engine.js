@@ -172,7 +172,7 @@ for (let x = 0; x < textureCanvas.width; x++) {
     }
 }
 let background = `url(${textureCanvas.toDataURL()})`;
-document.querySelector("table.main-container").style.backgroundImage = background;
-document.querySelectorAll("button").forEach(function(elem) {
-    elem.style.backgroundImage = background;
-});
+
+let computed = document.createElement("style");
+computed.innerText = `table.main-container { background-image: ${background}; }\nbutton { background-image: ${background}; }`
+document.body.appendChild(computed);
