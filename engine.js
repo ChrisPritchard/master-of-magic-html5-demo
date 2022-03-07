@@ -290,7 +290,6 @@ function moveUnitTo(tx, ty) {
         my = -moveSpeed;
 
     unit.classList.remove("active-unit");
-    moveToCentreOn(unitX * tileDim, unitY * tileDim);
 
     unitMoveAction = setInterval(function () {
         let currX = getLeft(unit);
