@@ -1,5 +1,9 @@
 # Master of Magic HTML5 Demo
 
+[Can be viewed live here](https://chrispritchard.github.io/master-of-magic-html5-demo/)
+
+<div align="center"><img src="./screenie.jpg"/></div>
+
 Just a simple mockup of the main screen of [Master of Magic](https://en.wikipedia.org/wiki/Master_of_Magic), using HTML5 technologies (HTML, JS and CSS).
 
 Has:
