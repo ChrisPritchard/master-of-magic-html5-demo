@@ -12,3 +12,5 @@ Has:
 The main map is just a massive table (60x40 cells), while the minimap uses a canvas. The textures are generally gifs used as background images.
 
 The graphics used for the map tiles and the unit were made by me in [aseprite](https://aseprite.org/). They're shit but free under CC if anyone wants them.
+
+For the perlin noise, I've used this chap's library: https://github.com/joeiddon/perlin.
